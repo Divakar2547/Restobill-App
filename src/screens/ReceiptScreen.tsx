@@ -168,7 +168,7 @@ ${itemLines}
               <InfoRow label="Customer" value={invoice.customerName} />
             ) : null}
             {invoice.tableNumber ? (
-              <InfoRow label="Table" value={invoice.tableNumber} />
+              <InfoRow label="Ph No" value={invoice.tableNumber} />
             ) : null}
           </View>
 
