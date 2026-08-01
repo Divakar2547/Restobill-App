@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, Animated, StatusBar, Image } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
@@ -7,15 +7,24 @@ import AppText from '../components/AppText';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Splash'>;
 
+// Safely resolve the logo — if the asset doesn't exist the require() call
+// itself would throw at bundle time, so we guard it with a try/catch.
+let logoSource: number | null = null;
+try {
+  logoSource = require('../../assets/logo.png');
+} catch {
+  logoSource = null;
+}
+
 const SplashScreen = ({ navigation }: Props) => {
   const logoScale = useRef(new Animated.Value(0)).current;
   const logoOpacity = useRef(new Animated.Value(0)).current;
   const textOpacity = useRef(new Animated.Value(0)).current;
   const taglineOpacity = useRef(new Animated.Value(0)).current;
   const dotScale = useRef(new Animated.Value(0)).current;
+  const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
-    // Logo bounce in
     Animated.sequence([
       Animated.parallel([
         Animated.spring(logoScale, {
@@ -30,13 +39,11 @@ const SplashScreen = ({ navigation }: Props) => {
           useNativeDriver: true,
         }),
       ]),
-      // Text fade in
       Animated.timing(textOpacity, {
         toValue: 1,
         duration: 500,
         useNativeDriver: true,
       }),
-      // Tagline + dot
       Animated.parallel([
         Animated.timing(taglineOpacity, {
           toValue: 1,
@@ -59,6 +66,8 @@ const SplashScreen = ({ navigation }: Props) => {
     return () => clearTimeout(timer);
   }, [navigation, logoScale, logoOpacity, textOpacity, taglineOpacity, dotScale]);
 
+  const showImage = logoSource !== null && !imgError;
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.primaryDark} barStyle="light-content" />
@@ -75,11 +84,16 @@ const SplashScreen = ({ navigation }: Props) => {
         ]}
       >
         <View style={styles.logoInner}>
-          <Image
-            source={require('../../assets/logo.png')}
-            style={styles.logoImage}
-            resizeMode="contain"
-          />
+          {showImage ? (
+            <Image
+              source={logoSource as number}
+              style={styles.logoImage}
+              resizeMode="contain"
+              onError={() => setImgError(true)}
+            />
+          ) : (
+            <AppText style={styles.logoEmoji}>🍽️</AppText>
+          )}
         </View>
       </Animated.View>
 
@@ -100,7 +114,7 @@ const SplashScreen = ({ navigation }: Props) => {
 
       {/* Footer */}
       <View style={styles.footer}>
-        
+        <AppText style={styles.version}>Version 1.0.0</AppText>
       </View>
     </View>
   );
@@ -147,6 +161,9 @@ const styles = StyleSheet.create({
   logoImage: {
     width: 160,
     height: 160,
+  },
+  logoEmoji: {
+    fontSize: 70,
   },
   appName: {
     fontSize: 42,

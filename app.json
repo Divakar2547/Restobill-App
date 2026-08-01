@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#7C3AED"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.restrobill.app"
@@ -22,6 +24,11 @@
         "backgroundColor": "#7C3AED"
       },
       "package": "com.restrobill.app"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9ca03cb6-4275-4086-ae6c-5a99afb5721e"
+      }
     }
   }
 }
