@@ -114,7 +114,7 @@ const CartScreen = () => {
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
         {/* Customer Info */}
-        <View style={styles.section}>
+        <View style={[styles.section, styles.primaryInfoSection]}>
           <AppText style={styles.sectionTitle}>Order Details</AppText>
           <View style={styles.row}>
             <AppInput
@@ -125,10 +125,10 @@ const CartScreen = () => {
               containerStyle={styles.halfInput}
             />
             <AppInput
-              label="Table Number"
+              label="Ph No"
               value={tableNumber}
               onChangeText={t => dispatch(setTableNumber(t))}
-              placeholder="e.g. T-5"
+              placeholder="e.g. 98765 43210"
               containerStyle={styles.halfInput}
             />
           </View>
@@ -283,6 +283,12 @@ const styles = StyleSheet.create({
   },
   section: {
     marginBottom: Spacing.xl,
+  },
+  primaryInfoSection: {
+    backgroundColor: Colors.surface,
+    borderRadius: Radius.lg,
+    padding: Spacing.lg,
+    ...Shadow.sm,
   },
   sectionTitle: {
     fontSize: Typography.fontSizeLG,
